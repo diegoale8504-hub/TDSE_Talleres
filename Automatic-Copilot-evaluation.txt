@@ -1,0 +1,309 @@
+======================================================================
+  AUTOMATIC COPILOT EVALUATION – TA GRADING REPORT
+  Course: Digital Transformation and Enterprise Architecture
+  Topic: Stellar Luminosity – Linear and Polynomial Regression
+  Student: Diego Alejandro Rozo Gaviria
+  Date: 2026-02-24
+======================================================================
+
+----------------------------------------------------------------------
+SUMMARY
+----------------------------------------------------------------------
+The repository presents a complete and technically sound implementation
+of linear and polynomial regression from first principles applied to a
+stellar luminosity dataset. All core mathematical components – hypothesis
+function, MSE cost, gradients, gradient descent (both non-vectorized and
+vectorized), cost surface, and convergence plots – are correctly coded
+and explained. The polynomial regression notebook demonstrates proper
+feature engineering ([M, T, M², M·T]), a three-model comparison
+(M1, M2, M3), and a cost-vs-interaction-weight sweep. Cloud execution
+in AWS SageMaker is evidenced with multiple screenshots in the README.
+The main deductions stem from: (1) learning-rate experiments being
+described only in prose rather than executed as runnable code cells,
+(2) a missing inference example for a novel star in Notebook 2,
+and (3) pandas being imported in Notebook 2 despite not being part of
+the allowed library set.
+
+----------------------------------------------------------------------
+GRADING BREAKDOWN (0.0 – 5.0 scale)
+----------------------------------------------------------------------
+
+1. Repository Structure & Compliance          0.45 / 0.50
+   ----------------------------------------------------------
+   + README.md present: YES. "Taller 1/README.md" is the primary
+     README covering this assignment; a root-level README.md also
+     exists describing the broader workshop context.
+   + Two notebooks covering Part I and Part II: YES, achieved across
+     three files – the non-vectorized notebook (01-...) and the
+     vectorized notebook (03-...) together constitute Part I, and
+     the multifeature notebook (04-...) constitutes Part II. Slight
+     departure from the recommended two-notebook layout, but no
+     penalty per rubric. ("Taller 2/Heart_desease.ipynb" is
+     unrelated to this assignment and is ignored.)
+   + Datasets defined inside notebooks: YES. All stellar mass,
+     temperature, and luminosity arrays are hard-coded within cells;
+     no external file I/O.
+   + Only allowed libraries used: MOSTLY. Python, NumPy, and
+     Matplotlib are used correctly. pandas is imported in Notebook 2
+     ("import pandas as pd") but is never actually called. Deduction
+     of 0.05 for importing a disallowed library, even if unused.
+
+2. Notebook 1 – Linear Regression (One Feature)  1.70 / 2.00
+   ----------------------------------------------------------
+   + Dataset visualization and interpretation: YES. Scatter plot of
+     stellar mass vs. luminosity is present with correct axis labels
+     in both notebooks.
+   + Hypothesis function and MSE cost: YES. compute_cost() correctly
+     implements J(w,b) = (1/2m) * Σ(wx+b−y)² with explicit loops
+     (non-vectorized) and with NumPy vectorization (vectorized).
+   + Cost surface [MANDATORY]: YES. A 3D surface plot of J(w,b) over
+     a grid of w and b values is produced in both notebooks with
+     labeled axes and viridis colormap. Explanation of the bowl-shaped
+     surface is included in markdown.
+   + Correct gradient derivation: YES. The partial derivatives
+     ∂J/∂w and ∂J/∂b are both derived in markdown and implemented
+     correctly in compute_gradients().
+   + Non-vectorized gradient descent: YES. Implemented in Notebook 01
+     using explicit Python loops; parameter history and cost per
+     iteration are recorded.
+   + Vectorized gradient descent: YES. Implemented in Notebook 03
+     using NumPy vector/matrix operations; functionally equivalent.
+   + Convergence plot [MANDATORY]: YES. Cost vs. iteration plot
+     produced in both notebooks; log-scale version also shown in the
+     vectorized notebook.
+   + Multiple learning-rate experiments (≥3) [MANDATORY]: PARTIAL.
+     Three learning rates (α = 0.001, 0.1, 0.5) are discussed in the
+     Exercises section of both notebooks with qualitative outcomes
+     (slow convergence, good convergence, divergence). However, the
+     experiments are written as static text descriptions rather than
+     executable code cells that actually run and plot the three curves.
+     This is the most significant gap in Notebook 1. Deduction: −0.20.
+   + Final fit plot and error discussion: YES. Predicted vs. observed
+     luminosity plot is shown. Markdown notes the limitations of the
+     linear fit on power-law data.
+   + Conceptual understanding – meaning of w: YES. Theory section
+     clearly states "w is the slope: how much f_{w,b}(x) changes when
+     x increases by 1."
+   + Conceptual understanding – limits of linearity: PARTIAL. The fit
+     plot visually shows the mismatch; a brief comment is present, but
+     deeper quantitative discussion (e.g., residual plot, R² value) is
+     absent. Minor deduction: −0.10.
+
+3. Notebook 2 – Polynomial Regression (Two Features)  1.65 / 2.00
+   ----------------------------------------------------------
+   + Visualization with temperature encoding: YES. Scatter plot of M
+     vs. L with color mapped to T using the "plasma" colormap and a
+     labeled colorbar is present.
+   + Feature engineering [M, T, M², M·T]: YES. All four features are
+     explicitly constructed via np.column_stack([M, T, M**2, M*T]).
+   + Vectorized loss and gradients: YES. compute_cost() uses the dot-
+     product form; compute_gradient() uses X.T @ error / m. Both are
+     fully vectorized.
+   + Training and convergence plot: YES. Cost vs. iteration is plotted
+     both on a linear scale and a log scale; convergence is clearly
+     visualized.
+   + Feature selection experiment M1, M2, M3 [MANDATORY]: YES.
+     Three models are trained and compared: M1=[M,T], M2=[M,T,M²],
+     M3=[M,T,M²,M·T]. Final cost and RMSE are tabulated, and
+     predicted-vs-true scatter plots for all three are shown side by
+     side. This is well executed.
+   + Interaction cost analysis (w_MT sweep) [MANDATORY]: YES. The
+     learned w_MT is swept over a range and J is re-evaluated at each
+     point. The parabolic cost curve is plotted with a vertical line
+     marking the optimal coefficient. A quantitative comparison to the
+     zero-interaction cost is printed. Well done.
+   + Inference example and interpretation [MANDATORY]: MISSING. There
+     is no code cell that passes a new stellar observation (e.g., a
+     star with M=1.5 M☉ and T=7200 K) through the trained model to
+     produce and interpret a luminosity prediction. The exercises
+     section alludes to applying the model, but no explicit inference
+     demonstration is present. Deduction: −0.25.
+   + Minor: Learning-rate experiments for Part II are also described
+     in text only (α = 1e-3, 5e-4, 5e-2), not as executable cells.
+     Deduction: −0.10.
+
+4. Cloud Execution Evidence (SageMaker)         0.45 / 0.50
+   ----------------------------------------------------------
+   + Description of SageMaker execution: YES. Taller 1/README.md
+     explicitly states notebooks were uploaded and executed on AWS
+     SageMaker Studio.
+   + Screenshots of notebooks in SageMaker: YES. Multiple screenshots
+     (image.png through image-22.png) are referenced showing the
+     SageMaker Studio interface, notebook files, and running cells.
+   + Successful execution: YES. Screenshots showing cell outputs and
+     rendered plots in the cloud environment are included.
+   + At least one plot visible: YES. Several screenshots show rendered
+     matplotlib plots within SageMaker.
+   + Brief local vs. cloud comparison: YES. README includes a clear
+     paragraph contrasting local vs. managed cloud execution, noting
+     the equivalent numerical results and the enterprise-readiness of
+     SageMaker.
+   Minor deduction (−0.05): One screenshot reference in the README
+   ("images/notebook1_plot.png") points to a nonexistent path; all
+   other screenshots correctly reference the local image files.
+
+----------------------------------------------------------------------
+FINAL GRADE
+----------------------------------------------------------------------
+
+  Repository structure & compliance:    0.45 / 0.50
+  Notebook 1 – Linear regression:       1.70 / 2.00
+  Notebook 2 – Polynomial regression:   1.65 / 2.00
+  Cloud execution evidence:             0.45 / 0.50
+  --------------------------------------------------
+  Total:                                4.25 / 5.00
+
+Final grade: 4.25 / 5.0
+
+Result: PASS (≥ 3.0)
+
+----------------------------------------------------------------------
+STRENGTHS
+----------------------------------------------------------------------
+• Complete from-scratch implementation of all required mathematical
+  components (hypothesis, MSE, gradients, gradient descent) without
+  any ML libraries.
+• Both non-vectorized (explicit loops) and vectorized (NumPy)
+  versions of gradient descent are correctly implemented and produce
+  consistent results.
+• Cost surface visualization is present in both Part I notebooks and
+  is pedagogically clear (labeled axes, 3D plot).
+• Excellent feature engineering in Notebook 2: all four required
+  features [M, T, M², M·T] are constructed and used.
+• Three-model comparison (M1, M2, M3) is thorough: tabular summary
+  and side-by-side scatter plots make the improvement from additional
+  features visually clear.
+• Interaction term analysis (w_MT sweep) is correctly implemented and
+  well visualized, with a quantitative comparison to the no-interaction
+  baseline.
+• Temperature-encoded scatter plot with colorbar in Notebook 2 is an
+  appropriate and informative visualization.
+• AWS SageMaker execution is extensively documented with many
+  screenshots and a concrete local vs. cloud comparison.
+• Theory refresher sections in each notebook show correct mathematical
+  notation for hypothesis, MSE, and gradient descent.
+
+----------------------------------------------------------------------
+ISSUES & MISSING ELEMENTS
+----------------------------------------------------------------------
+• [MANDATORY – Notebook 1] Learning-rate experiments (≥3) are
+  described only in static text (prose answers to exercises). No code
+  cell actually runs gradient descent for each of the three rates and
+  plots their convergence curves side by side. This is the most
+  significant missing element in Part I.
+• [MANDATORY – Notebook 2] Inference example is absent. The assignment
+  requires predicting luminosity for at least one new star and
+  interpreting the result; this is never performed as executable code.
+• [Notebook 2] Learning-rate experiments for the polynomial model are
+  also written as text-only descriptions rather than runnable code.
+• [Notebook 2] pandas is imported ("import pandas as pd") but is
+  neither used nor permitted by the assignment constraints.
+• [README] The image reference "images/notebook1_plot.png" points to
+  a path that does not exist in the repository; the image is missing.
+• [Notebook 1] The discussion of the limits of linear regression (why
+  a line fits poorly on power-law stellar data) is brief. A residual
+  analysis or explicit mention of the mass–luminosity power law would
+  strengthen the conceptual discussion.
+• No quantitative comparison (e.g., final cost values or RMSE) between
+  the non-vectorized and vectorized models in Part I, even though both
+  are claimed to produce identical results.
+
+----------------------------------------------------------------------
+TA FEEDBACK TO STUDENT
+----------------------------------------------------------------------
+Your implementation demonstrates a solid, hands-on understanding of
+linear and polynomial regression. The mathematical foundations are
+correctly coded and well explained, and the extension to polynomial
+features – including the interaction term analysis – is a genuine
+strength. The SageMaker documentation is thorough.
+
+To reach a higher grade in future workshops, focus on the following:
+
+1. Run your experiments as code, not prose. When the rubric asks for
+   multiple learning-rate experiments, implement each one in its own
+   code cell, record the results, and produce a comparative plot. A
+   reader should be able to re-run your notebook and see all results
+   immediately.
+
+2. Always include an inference example. For Part II, add a cell such
+   as:
+       M_new = np.array([1.5])
+       T_new = np.array([7200])
+       X_new = np.column_stack([M_new, T_new, M_new**2, M_new*T_new])
+       X_new_scaled = (X_new - X_means) / X_stds
+       L_pred = predict(X_new_scaled, w_M3, b_M3)
+       print(f"Predicted luminosity: {L_pred[0]:.2f} L☉")
+   Then interpret what the result means physically.
+
+3. Remove the pandas import from Notebook 2. It is not needed and
+   violates the constraint of the assignment.
+
+4. Fix the broken image reference in the README
+   ("images/notebook1_plot.png").
+
+5. Deepen the discussion of why linear regression underperforms on
+   stellar data (hint: L ∝ M^4 is a power law, not a linear
+   relationship) and mention how polynomial features address this.
+
+Overall, this is solid, passing work that shows genuine effort and
+competence. With the adjustments above, especially executing
+experiments programmatically, it would approach a top score.
+
+----------------------------------------------------------------------
+AI-GENERATION ASSESSMENT (NON-GRADING – INFORMATIVE ONLY)
+----------------------------------------------------------------------
+
+A. Qualitative Assessment
+   -------------------------
+   Indicators of AI generation:
+   - Markdown explanations are highly uniform in structure and tone
+     across both notebooks, following a consistent template
+     (theory → implementation → visualization → exercises).
+   - Theory refresher sections in both notebooks are nearly identical
+     in phrasing, suggesting they were generated together.
+   - Exercise answers in the exercises sections are written in
+     complete, fluent English with perfect punctuation – more polished
+     than typical student notes made during active learning.
+   - The transition from describing exercises as "for you to try" to
+     immediately providing comprehensive answers within the same cell
+     is an unusual pattern consistent with AI-assisted completion.
+   - Function docstrings are thorough and consistent in style (NumPy
+     docstring convention), suggesting generation rather than
+     organic authoring.
+
+   Indicators of human work:
+   - The stellar luminosity domain was appropriately applied across
+     both notebooks, showing subject-matter awareness.
+   - Feature scaling is added pragmatically in Notebook 2 after
+     encountering numerical issues with the raw features, suggesting
+     iterative experimentation.
+   - The decision to split Part I across two separate notebooks
+     (non-vectorized and vectorized) rather than combining them is
+     an organizational choice that reflects student judgment.
+   - Some minor inconsistencies exist between notebooks (e.g., the
+     cost surface uses slightly different w/b ranges), which can
+     indicate manual iteration.
+
+B. Quantitative Estimate
+   -------------------------
+   Code:                  ~55%
+   Explanations/markdown: ~75%
+   README:                ~65%
+
+C. Commentary
+   -------------------------
+   The code architecture (function signatures, docstring style,
+   consistent naming conventions) and the exercise answer prose
+   strongly suggest heavy AI tool involvement, particularly for the
+   explanation and documentation layers. The core algorithmic structure
+   and the domain-specific dataset choice show evidence of student
+   direction and adaptation. The splitting of Part I into two
+   notebooks and the iterative tuning visible in the feature scaling
+   section suggest the student actively steered the implementation
+   rather than accepting a monolithic AI output.
+
+   This assessment is observational and does not imply misconduct.
+
+======================================================================
+END OF EVALUATION REPORT
+======================================================================
